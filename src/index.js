@@ -1,9 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import App from './containers/App';
 
 ReactDOM.render(
-  <React.StrictMode>
-    <h1> Hello world!</h1>
-  </React.StrictMode>,
+  <App />,
   document.getElementById('root')
 );
