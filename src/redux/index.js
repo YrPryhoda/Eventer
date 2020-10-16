@@ -1,22 +1,22 @@
 import { createStore, applyMiddleware } from 'redux';
-import reducer from './reducer';
+import { composeWithDevTools } from 'redux-devtools-extension';
+import rootReducer from './reducer';
 import logger from 'redux-logger';
 import thunk from 'redux-thunk';
-import { routerMiddleware } from 'react-router-redux';
+import { routerMiddleware } from 'connected-react-router';
 import history from 'helpers/history';
 
+const middlewares = [routerMiddleware(history), logger, thunk]
 
-const middlewares = applyMiddleware(
-  thunk,
-  logger,
-  routerMiddleware(history)
+const enchancer = applyMiddleware(
+  ...middlewares
 );
 
 const store = createStore(
-  reducer(history), 
-  middlewares
-  );
-  
+  rootReducer(history),
+  composeWithDevTools(enchancer)
+);
+
 window.store = store;
 
 export default store
