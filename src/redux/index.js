@@ -6,7 +6,7 @@ import thunk from 'redux-thunk';
 import { routerMiddleware } from 'connected-react-router';
 import history from 'helpers/history';
 
-const middlewares = [routerMiddleware(history), logger, thunk]
+const middlewares = [routerMiddleware(history), /* logger, */ thunk]
 
 const enchancer = applyMiddleware(
   ...middlewares

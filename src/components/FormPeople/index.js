@@ -1,20 +1,24 @@
 import React from 'react'
 import { reduxForm, Field } from 'redux-form'
 import ErrorField from 'components/ErrorField';
-import { validate } from 'helpers/fieldValidate';
+import {customFormValidator} from 'helpers/fieldValidate';
+import styles from './styles.module.scss';
 
-const SignUp = ({ handleSubmit }) => {
+const FormPeople = ({handleSubmit}) => {
   return (
     <div>
-      <h2>Sign Up</h2>
+      <h2>Add people</h2>
       <form onSubmit={handleSubmit}>
         <Field
-          name='email'
+          name='firstName'
           component={ErrorField}
         />
         <Field
-          name='password' 
-          type='password'
+          name='lastName' 
+          component={ErrorField}
+        />
+        <Field
+          name='position' 
           component={ErrorField}
         />
         <div>
@@ -25,8 +29,7 @@ const SignUp = ({ handleSubmit }) => {
   )
 }
 
-
 export default reduxForm({
-  form: 'auth',
-  validate
-})(SignUp)
+  form: 'peopleForm',
+  validate: customFormValidator
+})(FormPeople)
