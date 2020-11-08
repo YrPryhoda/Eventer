@@ -1,28 +1,32 @@
 import React from 'react'
 import { reduxForm, Field } from 'redux-form'
 import ErrorField from 'components/ErrorField';
-import {customFormValidator} from 'helpers/fieldValidate';
+import { customFormValidator } from 'helpers/fieldValidate';
 import styles from './styles.module.scss';
 
-const FormPeople = ({handleSubmit}) => {
+const FormPeople = ({ handleSubmit }) => {
   return (
     <div>
-      <h2>Add people</h2>
+      <h2 className={styles.header}>Add people</h2>
       <form onSubmit={handleSubmit}>
         <Field
           name='firstName'
           component={ErrorField}
         />
         <Field
-          name='lastName' 
+          name='lastName'
           component={ErrorField}
         />
         <Field
-          name='position' 
+          name='position'
           component={ErrorField}
         />
         <div>
-          <input type='submit' />
+          <input
+            type='submit'
+            value='Confirm'
+            className={styles.btn}
+          />
         </div>
       </form>
     </div>

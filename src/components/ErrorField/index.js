@@ -1,11 +1,15 @@
 import React from 'react'
+import styles from './styles.module.scss';
 
 const ErrorField = ({ input, type, meta: { error, touched } }) => {
-  const errorText = touched && error && <div>{error}</div>
+  const errorText = touched &&
+    error &&
+    <div className={styles.errorField}>{error}</div>
+
   return (
-    <div>
-      <label>{input.name}</label>
-      <input {...input} type={type} />
+    <div className={styles.fieldWrapper}>
+      <label className={styles.fieldLabel}>{input.name}</label>
+      <input className={styles.inputField} {...input} type={type} />
       {errorText}
     </div>
   )

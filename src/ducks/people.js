@@ -1,6 +1,7 @@
 import { appName } from 'constants/Firebase.js';
 import { Record } from 'immutable'
-import renderNotification from 'components/Notification';
+import { put, takeEvery, call } from 'redux-saga/effects'
+import { generateId } from 'helpers/idGen';
 
 export const moduleName = 'people';
 export const ADD_REQUEST = `${appName}/${moduleName}/ADD_REQUEST`;
@@ -24,7 +25,7 @@ export default function reducer(
     case ADD_SUCCESS:
       return state
         .set('loading', false)
-        .set('user', payload.user)
+        .set('user', payload)
         .set('error', null)
     case ADD_ERROR:
       return state
@@ -35,20 +36,31 @@ export default function reducer(
   }
 }
 
-export const addPeople = (user) => dispatch => {
+export const addPeople = (user) => {
+  return {
+    type: ADD_REQUEST,
+    payload: user
+  }
+}
+
+export const addPeopleSaga = function* (action) {
   try {
-    dispatch({
-      type: ADD_REQUEST
-    });
-    dispatch({
+    const id = yield call(generateId);
+
+    yield put({
       type: ADD_SUCCESS,
-      payload: { user }
+      payload: { ...action.payload, id }
     })
+
   } catch (error) {
-    dispatch({
+    yield put({
       type: ADD_ERROR,
       error
     })
   }
 
+}
+
+export const saga = function* () {
+  yield takeEvery(ADD_REQUEST, addPeopleSaga)
 }

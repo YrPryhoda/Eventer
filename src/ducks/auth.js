@@ -61,6 +61,9 @@ export const signUp = (email, password) => dispatch => {
 }
 
 /* firebase.auth().onAuthStateChanged(user => {
- console.log(user)
-})
- */
+  const store = require('../redux')
+  store.dispatch({
+    type: SIGN_IN_SUCCESS,
+    payload: { user }
+  })
+}) */

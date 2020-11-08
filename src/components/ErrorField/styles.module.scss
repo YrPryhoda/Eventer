@@ -1,0 +1,23 @@
+.errorField {
+  background-color: red;
+  color: #ffffff;
+  margin: 10px 0;
+  padding: 5px;
+}
+
+.fieldWrapper {
+  margin: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 300px;
+
+  .fieldLabel {
+    margin-right: 10px;
+    text-transform: uppercase;
+  }
+
+  .inputField {
+    padding: 3px 10px;
+  }
+}
