@@ -2,6 +2,7 @@ import firebase from 'firebase';
 import { appName } from 'constants/Firebase.js';
 import { Record } from 'immutable'
 import renderNotification from 'components/Notification';
+import { put, call, take, all, cps } from 'redux-saga/effects';
 
 export const moduleName = 'auth';
 export const SIGN_UP_REQUEST = `${appName}/${moduleName}/SIGN_UP_REQUEST`;
@@ -26,6 +27,7 @@ export default function reducer(
       return state.set('loading', true);
 
     case SIGN_UP_SUCCESS:
+    case SIGN_IN_SUCCESS:
       return state
         .set('loading', false)
         .set('user', payload.user)
@@ -41,29 +43,55 @@ export default function reducer(
   }
 }
 
-export const signUp = (email, password) => dispatch => {
-  dispatch({
-    type: SIGN_UP_REQUEST
-  });
+export const signUp = (email, password) => ({
+  type: SIGN_UP_REQUEST,
+  payload: { email, password }
+});
 
-  firebase.auth().createUserWithEmailAndPassword(email, password)
-    .then(user => dispatch({
-      type: SIGN_UP_SUCCESS,
-      payload: { user }
-    }))
-    .catch(error => {
-      renderNotification('error', error.message);
-      return dispatch({
+export const signUpSaga = function* () {
+  const auth = firebase.auth();
+  while (true) {
+    const action = yield take(SIGN_UP_REQUEST);
+    try {
+      const user = yield call([
+        auth, // контекст
+        auth.createUserWithEmailAndPassword //метод
+      ],
+        action.payload.email, //аргументы
+        action.payload.password //аргументы
+      );
+
+      yield put({
+        type: SIGN_UP_SUCCESS,
+        payload: { user }
+      });
+
+    } catch (error) {
+      yield put({
         type: SIGN_UP_ERROR,
         error
-      })
-    })
+      });
+      renderNotification('error', error.message)
+    }
+  }
 }
 
-/* firebase.auth().onAuthStateChanged(user => {
-  const store = require('../redux')
-  store.dispatch({
-    type: SIGN_IN_SUCCESS,
-    payload: { user }
-  })
-}) */
+export const watchStatusChange = function* () {
+  const auth = firebase.auth();
+
+  try {
+    yield cps([auth, auth.onAuthStateChanged])
+  } catch (user) {
+    yield put({
+      type: SIGN_IN_SUCCESS,
+      payload: { user }
+    })
+  }
+}
+
+export const saga = function* () {
+  yield all([
+    signUpSaga(),
+    watchStatusChange()
+  ])
+}

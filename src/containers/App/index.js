@@ -6,7 +6,6 @@ import history from 'helpers/history';
 import Routes from '../Routes';
 import { NotificationContainer } from 'react-notifications';
 
-import 'helpers/firebaseConfig.js';
 import 'styles/global.scss';
 
 const App = () => {
