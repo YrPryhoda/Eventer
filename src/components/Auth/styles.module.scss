@@ -1,7 +1,31 @@
 .header {
-  color: red;
-}
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
 
-.link {
-  margin: 10px 20px;
+  .headerTitle {
+    text-align: center;
+  }
+
+  .navigation {
+    display: flex;
+    justify-content: space-between;
+
+    .link {
+      display: inline-block;
+      text-decoration: none;
+      margin-right: 20px;
+      margin-top: 10px;
+      border: 1px solid #b18a0d;
+      padding: 5px 10px;
+      border-radius: 5px;
+      background-color: rgb(236, 177, 13);
+      color: #ffffff;
+      transition: all 0.4s;
+      &:hover {
+        background-color: rgb(255, 211, 91);
+        color: #000000;
+      }
+    }
+  }
 }

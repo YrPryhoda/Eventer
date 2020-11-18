@@ -1,0 +1,14 @@
+.signUpBlock {
+  padding: 20px;
+
+  .btn {
+    border: 1px solid #cccccc;
+    padding: 5px 10px;
+    border-radius: 5px;
+    transition: all 0.4s;
+    &:hover {
+      color: #000000;
+      cursor: pointer;
+    }
+  }
+}

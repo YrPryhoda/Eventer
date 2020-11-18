@@ -5,13 +5,13 @@ import Auth from 'components/Auth';
 import SignIn from 'components/SignIn';
 import SignUp from 'components/SignUp';
 import { connect } from 'react-redux';
-import { signUp } from 'ducks/auth'
+import { signUp, signIn } from 'ducks/auth'
 import Spinner from 'components/Spinner';
 import { moduleName as authName } from 'ducks/auth';
 
-const AuthPage = ({ signUp }) => {
-  const handleSignIn = () => console.log('_')
-  const handleSignUp = ({ email, password }) => signUp(email, password)
+const AuthPage = ({ signUp, signIn }) => {
+  const handleSignIn = ({ email, password }) => signIn(email, password);
+  const handleSignUp = ({ email, password }) => signUp(email, password);
   const loading = useSelector(state => state[authName].loading);
   return loading ?
     <Spinner /> :
@@ -22,4 +22,10 @@ const AuthPage = ({ signUp }) => {
     </>
 }
 
-export default connect(null, { signUp })(AuthPage)
+const mapDispatchToProps = {
+  signIn,
+  signUp
+}
+
+
+export default connect(null, mapDispatchToProps)(AuthPage)

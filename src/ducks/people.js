@@ -2,6 +2,7 @@ import { appName } from 'constants/Firebase.js';
 import { Record } from 'immutable'
 import { put, takeEvery, call } from 'redux-saga/effects'
 import { generateId } from 'helpers/idGen';
+import { reset } from 'redux-form';
 
 export const moduleName = 'people';
 export const ADD_REQUEST = `${appName}/${moduleName}/ADD_REQUEST`;
@@ -51,6 +52,8 @@ export const addPeopleSaga = function* (action) {
       type: ADD_SUCCESS,
       payload: { ...action.payload, id }
     })
+
+    yield put(reset('peopleForm'))
 
   } catch (error) {
     yield put({
