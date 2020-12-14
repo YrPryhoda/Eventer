@@ -10,8 +10,8 @@ const Routes = () => {
   return (
     <Switch >
       <Route path='/auth' component={AuthPage} />
-      <Route path='/people' component={AddPeople} />
-      <Route path='/events' component={EventsPage} />
+      <PrivateRoute path='/people' component={AddPeople} />
+      <PrivateRoute path='/events' component={EventsPage} />
       <PrivateRoute path='/admin' component={AdminPage} />
     </Switch>
   )
