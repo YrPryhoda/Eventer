@@ -1,18 +1,20 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import EventsList from 'components/EventsList';
 import { useSelector, useDispatch } from 'react-redux'
-import { moduleName } from 'ducks/events'
+import { moduleName, watchFetchAll, eventsListSelector } from 'ducks/events';
+import Spinner from 'components/Spinner'
 
 const EventsPage = () => {
   const dispatch = useDispatch();
-  const events = useSelector(state => state[moduleName]);
-  console.log(events, dispatch);
+  const events = useSelector(state => eventsListSelector(state));
+  const loaded = useSelector(state => state[moduleName].loaded);
 
-  return (
-    <div>
-      <EventsList />
-    </div>
-  )
+  useEffect(() => {
+    dispatch(watchFetchAll())
+  }, []);
+
+  return !loaded ? <Spinner /> : <EventsList events={events} />
+
 }
 
 export default EventsPage

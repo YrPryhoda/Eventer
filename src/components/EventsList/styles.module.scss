@@ -1,0 +1,21 @@
+.tableWrapper {
+  width: 100%;
+  padding: 20px;
+
+  .table {
+    width: inherit;
+
+    td {
+      padding: 10px;
+    }
+
+    tbody > tr {
+      cursor: pointer;
+      transition: 0.3s all;
+
+      &:hover {
+        background-color: #fce300;
+      }
+    }
+  }
+}
