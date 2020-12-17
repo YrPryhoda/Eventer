@@ -1,16 +1,17 @@
 import React from 'react'
 import styles from './styles.module.scss'
 
-const EventsList = ({ events }) => {
+const EventsList = ({ events, handleClick }) => {
 
   const renderRows = () => {
     return events.map(event => {
-      return (<tr key={event.uid}>
-        <td>{event.title}</td>
-        <td>{event.where}</td>
-        <td>{event.when}</td>
-        <td><a target='blank' href={event.url}>{event.url} </a></td>
-      </tr>)
+      return (
+        <tr key={event.uid} onClick={() => handleClick(event.uid)}>
+          <td>{event.title}</td>
+          <td>{event.where}</td>
+          <td>{event.when}</td>
+          <td><a target='blank' href={event.url}>{event.url} </a></td>
+        </tr>)
     })
   }
 
