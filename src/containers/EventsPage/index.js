@@ -2,8 +2,7 @@ import React, { useEffect } from 'react'
 // import EventsList from 'components/EventsList';
 import VirtualizedEventsList from 'components/VirtualizedEventsList';
 import { useSelector, useDispatch } from 'react-redux'
-import { moduleName, selectEvent, watchFetchAll, eventsListSelector } from 'ducks/events';
-import Spinner from 'components/Spinner'
+import { moduleName, selectEvent, watchFetchLazy, eventsListSelector } from 'ducks/events';
 
 const EventsPage = () => {
   const dispatch = useDispatch();
@@ -12,14 +11,20 @@ const EventsPage = () => {
 
   const handleRowClick = ({ rowData }) => dispatch(selectEvent(rowData.uid));
 
+  const handleLoadMore = () => {
+    dispatch(watchFetchLazy())
+  };
 
   useEffect(() => {
-    dispatch(watchFetchAll())
+    dispatch(watchFetchLazy())
   }, []);
 
-  return !loaded ?
-    <Spinner /> :
-    <VirtualizedEventsList handleClick={handleRowClick} events={events} />
+  return <VirtualizedEventsList
+    handleLoadMore={handleLoadMore}
+    handleClick={handleRowClick}
+    events={events}
+    loaded={loaded}
+  />
 
 }
 

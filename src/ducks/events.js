@@ -4,13 +4,14 @@ import { Record, OrderedMap, OrderedSet } from 'immutable'
 import eventsArray from 'helpers/eventsState'
 // import renderNotification from 'components/Notification';
 // import { push } from 'react-router-redux'
-import { put, call, takeEvery } from 'redux-saga/effects';
+import { put, call, all, take, select } from 'redux-saga/effects';
 import { createSelector } from 'reselect'
 
 export const moduleName = 'events';
 const prefix = `${appName}/${moduleName}`;
 
 export const FETCH_ALL_REQUEST = `${prefix}/FETCH_ALL_REQUEST`;
+export const FETCH_LAZY_START = `${prefix}/FETCH_LAZY_START`;
 export const FETCH_ALL_SUCCESS = `${prefix}/FETCH_ALL_SUCCESS`;
 export const FETCH_ALL_FAIL = `${prefix}/FETCH_ALL_FAIL`;
 const SELECT_EVENT = `${prefix}/SELECT_EVENT`;
@@ -36,13 +37,16 @@ const EventRecord = Record({
 export default (state = new ReducerRecord(), { type, payload }) => {
   switch (type) {
     case FETCH_ALL_REQUEST:
+      return state;
+      
+    case FETCH_LAZY_START:
       return state.set('loading', true)
 
     case FETCH_ALL_SUCCESS:
       return state
-        .set('entities', eventsArray(payload, EventRecord))
+        .mergeIn(['entities'], eventsArray(payload, EventRecord))
         .set('loading', false)
-        .set('loaded', true)
+        .set('loaded', Object.keys(payload).length < 10)
 
     case SELECT_EVENT:
       return state.selected.contains(payload.uid) ?
@@ -63,26 +67,44 @@ export const selectEvent = uid => ({
   payload: { uid }
 })
 
-export const watchFetchAll = () => ({
+export const watchFetchLazy = () => ({
   type: FETCH_ALL_REQUEST
 })
 
 const workerFetchAll = function* () {
-  const ref = firebase.database().ref('events')
+  while (true) {
+    yield take(FETCH_ALL_REQUEST);
+    const state = yield select(state => state[moduleName]);
 
-  const data = yield call([
-    ref,
-    ref.once
-  ],
-    'value'
-  );
+    if (state.loading) continue;
 
-  yield put({
-    type: FETCH_ALL_SUCCESS,
-    payload: data.val()
-  })
+    yield put({
+      type: FETCH_LAZY_START
+    })
+
+    const lastEvent = state.entities.last();
+
+    const ref = firebase.database().ref('events')
+      .orderByKey()
+      .limitToFirst(10)
+      .startAt(lastEvent ? lastEvent.uid : '')
+
+    const data = yield call([
+      ref,
+      ref.once
+    ],
+      'value'
+    );
+
+    yield put({
+      type: FETCH_ALL_SUCCESS,
+      payload: data.val()
+    })
+  }
 }
 
 export const saga = function* () {
-  yield takeEvery(FETCH_ALL_REQUEST, workerFetchAll)
+  yield all([
+    workerFetchAll()
+  ])
 }
