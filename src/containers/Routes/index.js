@@ -5,6 +5,7 @@ import AdminPage from '../AdminPage';
 import PrivateRoute from 'containers/PrivateRoute';
 import AddPeople from '../AddPeople';
 import EventsPage from '../EventsPage';
+import PeoplePage from '../PeoplePage';
 
 const Routes = () => {
   return (
@@ -13,6 +14,7 @@ const Routes = () => {
       <PrivateRoute path='/people' component={AddPeople} />
       <PrivateRoute path='/events' component={EventsPage} />
       <PrivateRoute path='/admin' component={AdminPage} />
+      <PrivateRoute path='/load-people' component={PeoplePage} />
     </Switch>
   )
 }

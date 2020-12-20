@@ -18,7 +18,7 @@ const FormPeople = ({ handleSubmit }) => {
           component={ErrorField}
         />
         <Field
-          name='position'
+          name='email'
           component={ErrorField}
         />
         <div>

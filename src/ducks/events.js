@@ -38,7 +38,7 @@ export default (state = new ReducerRecord(), { type, payload }) => {
   switch (type) {
     case FETCH_ALL_REQUEST:
       return state;
-      
+
     case FETCH_LAZY_START:
       return state.set('loading', true)
 
