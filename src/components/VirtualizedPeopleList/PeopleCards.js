@@ -14,8 +14,6 @@ const PeopleCards = () => {
   const people = useSelector(state => allPeopleSelector(state))
   const loading = useSelector(state => state[moduleName].loading);
 
-  console.log(!people.length && loading);
-
   const rowRenderer = ({ index, key, style }) => (
     <PersonCard
       person={people[index]}
@@ -32,7 +30,7 @@ const PeopleCards = () => {
           <List
             rowCount={people.length}
             rowHeight={80}
-            height={600}
+            height={300}
             width={width}
             rowRenderer={rowRenderer}
           />

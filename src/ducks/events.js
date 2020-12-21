@@ -60,7 +60,12 @@ export default (state = new ReducerRecord(), { type, payload }) => {
 
 export const stateSelector = (state) => state[moduleName];
 export const eventsSelector = createSelector(stateSelector, events => events.entities)
-export const eventsListSelector = createSelector(eventsSelector, entities => entities.valueSeq().toArray())
+export const eventsListSelector = createSelector(eventsSelector, entities => entities.valueSeq().toArray());
+export const sectionSelector = createSelector(stateSelector, selection => selection.selected)
+export const selectedEventsSelector = createSelector(eventsSelector, sectionSelector, (entities, selection) => (
+  selection.toArray().map(uid => entities.get(uid))
+))
+
 
 export const selectEvent = uid => ({
   type: SELECT_EVENT,
