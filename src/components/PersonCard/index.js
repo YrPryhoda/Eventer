@@ -1,12 +1,34 @@
-import React from 'react'
+import React, { Component } from 'react'
+import { DragSource } from 'react-dnd';
 
-const PersonCard = ({ person, style }) => {
-  return (
-    <div style={{ width: 200, height: 100, ...style }}>
-      <h3>{person.firstName}&nbsp;{person.lastName}</h3>
-      <p>{person.email}</p>
-    </div>
-  )
+class PersonCard extends Component {
+
+  render() {
+    const { person, style, connectDragSource, isDragging } = this.props;
+    const draggStyle = {
+      backgroundColor: isDragging ? 'green' : 'white'
+    }
+
+    return connectDragSource(
+      <div style={{ width: 200, height: 100, ...draggStyle, ...style }}>
+        <h3>{person.firstName}&nbsp;{person.lastName}</h3>
+        <p>{person.email}</p>
+      </div>
+    )
+  }
 }
 
-export default PersonCard
+const spec = {
+  beginDrag(props) {
+    return {
+      id: props.person.id
+    }
+  }
+}
+
+const collect = (connect, monitor) => ({
+  connectDragSource: connect.dragSource(),
+  isDragging: monitor.isDragging()
+})
+
+export default DragSource('person', spec, collect)(PersonCard)

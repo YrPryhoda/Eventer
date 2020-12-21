@@ -5,7 +5,8 @@ import { ConnectedRouter } from 'connected-react-router'
 import history from 'helpers/history';
 import Routes from '../Routes';
 import { NotificationContainer } from 'react-notifications';
-
+import { DragDropContextProvider } from 'react-dnd'
+import HTML5Backend from 'react-dnd-html5-backend';
 import 'styles/global.scss';
 
 const App = () => {
@@ -13,7 +14,9 @@ const App = () => {
     <Provider store={store}>
       <NotificationContainer />
       <ConnectedRouter history={history}>
-        <Routes />
+        <DragDropContextProvider backend={HTML5Backend}>
+          <Routes />
+        </DragDropContextProvider>
       </ConnectedRouter>
     </Provider>
   )
