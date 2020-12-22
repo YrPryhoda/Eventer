@@ -21,8 +21,15 @@ class PersonCard extends Component {
 const spec = {
   beginDrag(props) {
     return {
-      id: props.person.id
+      uid: props.person.uid
     }
+  },
+  endDrag(props, monitor) {
+    return
+    /*  const personUid = props.person.uid;
+     const eventUid = monitor.getDropResult().eventUid;
+  */
+
   }
 }
 

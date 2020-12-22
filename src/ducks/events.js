@@ -14,6 +14,7 @@ export const FETCH_ALL_REQUEST = `${prefix}/FETCH_ALL_REQUEST`;
 export const FETCH_LAZY_START = `${prefix}/FETCH_LAZY_START`;
 export const FETCH_ALL_SUCCESS = `${prefix}/FETCH_ALL_SUCCESS`;
 export const FETCH_ALL_FAIL = `${prefix}/FETCH_ALL_FAIL`;
+
 const SELECT_EVENT = `${prefix}/SELECT_EVENT`;
 
 
@@ -54,7 +55,7 @@ export default (state = new ReducerRecord(), { type, payload }) => {
         state.update('selected', selected => selected.add(payload.uid))
 
     default:
-      return new ReducerRecord()
+      return state
   }
 }
 
@@ -72,9 +73,11 @@ export const selectEvent = uid => ({
   payload: { uid }
 })
 
-export const watchFetchLazy = () => ({
-  type: FETCH_ALL_REQUEST
-})
+export const watchFetchLazy = () => {
+  return {
+    type: FETCH_ALL_REQUEST
+  }
+}
 
 const workerFetchAll = function* () {
   while (true) {

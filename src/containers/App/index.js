@@ -14,7 +14,7 @@ const App = () => {
     <Provider store={store}>
       <NotificationContainer />
       <ConnectedRouter history={history}>
-        <DragDropContextProvider backend={HTML5Backend}>
+        <DragDropContextProvider debugMode={true} backend={HTML5Backend}>
           <Routes />
         </DragDropContextProvider>
       </ConnectedRouter>

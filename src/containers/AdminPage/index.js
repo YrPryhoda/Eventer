@@ -11,7 +11,9 @@ const AdminPage = () => {
 
   const dispatch = useDispatch();
   const events = useSelector(state => eventsListSelector(state));
+
   const loaded = useSelector(state => state[moduleName].loaded);
+console.log(loaded, events, 'LOADED?????');
 
   const handleRowClick = ({ rowData }) => dispatch(selectEvent(rowData.uid));
 
@@ -20,7 +22,7 @@ const AdminPage = () => {
   };
 
   useEffect(() => {
-    dispatch(watchFetchLazy())
+      dispatch(watchFetchLazy())
   }, []);
 
 
