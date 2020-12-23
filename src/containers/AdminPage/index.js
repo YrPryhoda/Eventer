@@ -6,7 +6,7 @@ import VirtualizedEventsList from 'components/VirtualizedEventsList';
 import SelectedEvents from 'components/SelectedEvents';
 import { moduleName, selectEvent, watchFetchLazy, eventsListSelector } from 'ducks/events';
 import CustomDrugLayer from 'components/CustomDrugLayer';
-
+import TrashButton from 'components/TrashButton'
 
 const AdminPage = () => {
 
@@ -29,6 +29,9 @@ const AdminPage = () => {
   return (
     <div className={style.section}>
       <h2 className={style.header}>Admin Page</h2>
+      <div className={style.trashBlock}>
+        <TrashButton />
+      </div>
       <div className={style.tables}>
         <div className={style.singleTable}>
           <PeopleCards />

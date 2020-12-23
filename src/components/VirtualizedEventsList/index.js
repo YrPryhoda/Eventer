@@ -1,7 +1,7 @@
 import React from 'react'
-import { Table, Column, AutoSizer, InfiniteLoader } from 'react-virtualized';
+import { AutoSizer, InfiniteLoader } from 'react-virtualized';
 import 'react-virtualized/styles.css';
-import styles from './styles.module.scss'
+import EventsTable from './table';
 
 const VirtualizedEventsList = ({ events, loaded, handleClick, handleLoadMore }) => {
 
@@ -23,48 +23,20 @@ const VirtualizedEventsList = ({ events, loaded, handleClick, handleLoadMore }) 
         >
           {
             ({ onRowsRendered, registerChild }) => (
-              <Table
-                ref={registerChild}
-                rowCount={events.length}
-                rowHeight={30}
-                height={300}
-                overscanRowCount={2}
-                headerHeight={50}
+              <EventsTable
+                registerChild={registerChild}
+                events={events}
                 rowGetter={rowGetter}
                 width={width}
-                onRowClick={handleClick}
+                handleClick={handleClick}
                 onRowsRendered={onRowsRendered}
-              >
-                <Column
-                  className={styles.row}
-                  label='Title'
-                  dataKey='title'
-                  width={width / 4}
-                />
-                <Column
-                  className={styles.row}
-                  label='Where'
-                  dataKey='where'
-                  width={width / 4}
-                />
-                <Column
-                  className={styles.row}
-                  label='When'
-                  dataKey='month'
-                  width={width / 4}
-                />
-                <Column
-                  className={styles.row}
-                  label='Link'
-                  dataKey='url'
-                  width={width / 4}
-                />
-              </Table>
+              />
             )}
         </InfiniteLoader>
       )}
     </AutoSizer>
   )
 }
+
 
 export default VirtualizedEventsList;

@@ -57,5 +57,5 @@ const mapStateToProps = (state, props) => {
     people: allPeopleSelector(state).filter(person => person.events.includes(props.event.uid))
   }
 }
-
+ 
 export default connect(mapStateToProps, { addEventWatcher })(DropTarget(['person'], spec, collect)(EventCard))

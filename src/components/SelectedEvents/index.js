@@ -8,7 +8,7 @@ const SelectedEvents = () => {
   return (
     <div>
       {
-        events.map(event => (
+        events.map(event => event && (
           <EventCard
             event={event}
             key={event.uid}

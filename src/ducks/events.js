@@ -4,7 +4,7 @@ import { Record, OrderedMap, OrderedSet } from 'immutable'
 import eventsArray from 'helpers/eventsState'
 // import renderNotification from 'components/Notification';
 // import { push } from 'react-router-redux'
-import { put, call, all, take, select } from 'redux-saga/effects';
+import { put, call, all, take, select, takeEvery } from 'redux-saga/effects';
 import { createSelector } from 'reselect'
 
 export const moduleName = 'events';
@@ -16,6 +16,10 @@ export const FETCH_ALL_SUCCESS = `${prefix}/FETCH_ALL_SUCCESS`;
 export const FETCH_ALL_FAIL = `${prefix}/FETCH_ALL_FAIL`;
 
 const SELECT_EVENT = `${prefix}/SELECT_EVENT`;
+
+export const DELETE_EVENT_REQUEST = `${prefix}/DELETE_EVENT_REQUEST`;
+export const DELETE_EVENT_SUCCESS = `${prefix}/DELETE_EVENT_SUCCESS`;
+export const DELETE_EVENT_FAIL = `${prefix}/DELETE_EVENT_FAIL`;
 
 
 const ReducerRecord = Record({
@@ -54,6 +58,11 @@ export default (state = new ReducerRecord(), { type, payload }) => {
         state.update('selected', selected => selected.remove(payload.uid)) :
         state.update('selected', selected => selected.add(payload.uid))
 
+    case DELETE_EVENT_SUCCESS:
+      return state
+        .set('loading', false)
+        .deleteIn(['entities', payload.uid])
+
     default:
       return state
   }
@@ -66,6 +75,9 @@ export const sectionSelector = createSelector(stateSelector, selection => select
 export const selectedEventsSelector = createSelector(eventsSelector, sectionSelector, (entities, selection) => (
   selection.toArray().map(uid => entities.get(uid))
 ))
+
+export const idSelector = (_, props) => props.uid;
+export const eventSelector = createSelector(eventsSelector, idSelector, (entities, id) => entities.get(id))
 
 
 export const selectEvent = uid => ({
@@ -111,8 +123,34 @@ const workerFetchAll = function* () {
   }
 }
 
+export const removeEventWatcher = (payload) => ({
+  type: DELETE_EVENT_REQUEST,
+  payload
+})
+
+const removeEventWorker = function* (action) {
+  const { payload } = action;
+  console.log(payload);
+  const ref = firebase.database().ref(`events/${payload.uid}`)
+
+  try {
+    yield call([
+      ref,
+      ref.remove
+    ]);
+
+    yield put({
+      type: DELETE_EVENT_SUCCESS,
+      payload
+    })
+  } catch (_) {
+
+  }
+}
+
 export const saga = function* () {
   yield all([
-    workerFetchAll()
+    workerFetchAll(),
+    takeEvery(DELETE_EVENT_REQUEST, removeEventWorker)
   ])
 }

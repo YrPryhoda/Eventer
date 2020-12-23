@@ -33,7 +33,7 @@ const spec = {
      const eventUid = monitor.getDropResult().eventUid;
   */
 
-  }
+  } 
 }
 
 const collect = (connect, monitor) => ({

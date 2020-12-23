@@ -1,10 +1,12 @@
 import React from 'react'
 import { DragLayer } from 'react-dnd';
 import PersonPreview from 'components/PersonCardDragPreview'
+import EventPreview from 'components/EventDragPreview'
 import style from './styles.module.scss';
 
 const previewMap = {
-  person: PersonPreview
+  person: PersonPreview,
+  event: EventPreview
 }
 
 class CustomDrugLayer extends React.Component {
