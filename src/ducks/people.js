@@ -26,6 +26,9 @@ export const stateSelector = (state) => state[moduleName];
 export const peopleSelector = createSelector(stateSelector, people => people.people)
 export const allPeopleSelector = createSelector(peopleSelector, people => people.valueSeq().toArray())
 
+export const idSelector = (_, props) => props.uid;
+export const personSelector = createSelector(peopleSelector, idSelector, (entities, id) => entities.get(id))
+
 const ReducerRecord = Record({
   user: null,
   people: new OrderedMap({}),

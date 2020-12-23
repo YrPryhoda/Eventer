@@ -5,6 +5,7 @@ import style from './styles.module.scss';
 import VirtualizedEventsList from 'components/VirtualizedEventsList';
 import SelectedEvents from 'components/SelectedEvents';
 import { moduleName, selectEvent, watchFetchLazy, eventsListSelector } from 'ducks/events';
+import CustomDrugLayer from 'components/CustomDrugLayer';
 
 
 const AdminPage = () => {
@@ -13,7 +14,6 @@ const AdminPage = () => {
   const events = useSelector(state => eventsListSelector(state));
 
   const loaded = useSelector(state => state[moduleName].loaded);
-console.log(loaded, events, 'LOADED?????');
 
   const handleRowClick = ({ rowData }) => dispatch(selectEvent(rowData.uid));
 
@@ -22,7 +22,7 @@ console.log(loaded, events, 'LOADED?????');
   };
 
   useEffect(() => {
-      dispatch(watchFetchLazy())
+    dispatch(watchFetchLazy())
   }, []);
 
 
@@ -45,6 +45,7 @@ console.log(loaded, events, 'LOADED?????');
           <SelectedEvents />
         </div>
       </div>
+      <CustomDrugLayer />
     </div>
   )
 }
