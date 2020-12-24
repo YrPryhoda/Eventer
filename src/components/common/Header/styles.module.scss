@@ -1,0 +1,33 @@
+.headerWrapper {
+  background-color: #f8f8f8;
+  padding: 10px;
+  .navWrap {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    list-style: none;
+
+    .nav {
+      display: inline-block;
+      margin-right: 20px;
+      margin-top: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #b18a0d;
+      padding: 5px 10px;
+      border-radius: 5px;
+      background-color: rgb(236, 177, 13);
+      transition: all 0.4s;
+      &:hover {
+        background-color: rgb(255, 211, 91);
+      }
+      & a {
+        color: #ffffff;
+        text-decoration: none;
+
+        &:hover {
+          color: #000000;
+        }
+      }
+    }
+  }
+}

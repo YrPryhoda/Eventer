@@ -1,0 +1,17 @@
+.link {
+  display: inline-block;
+  text-decoration: none;
+  margin-right: 20px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #b18a0d;
+  padding: 5px 10px;
+  border-radius: 5px;
+  background-color: rgb(236, 177, 13);
+  color: #ffffff;
+  transition: all 0.4s;
+  &:hover {
+    background-color: rgb(255, 211, 91);
+    color: #000000;
+  }
+}
