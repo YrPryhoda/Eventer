@@ -1,5 +1,5 @@
 import { DragSource } from 'react-dnd';
-import React, { Component } from 'react'
+import { Component } from 'react'
 import { getEmptyImage } from 'react-dnd-html5-backend'
 import { defaultTableRowRenderer } from 'react-virtualized'
 export class TableRow extends Component {

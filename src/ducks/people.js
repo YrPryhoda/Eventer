@@ -1,6 +1,6 @@
 import { appName } from 'constants/Firebase.js';
 import { Record, OrderedMap } from 'immutable'
-import { put, takeEvery, call, all, select } from 'redux-saga/effects'
+import { put, takeEvery, call, all, select, delay, fork, spawn, cancel, cancelled } from 'redux-saga/effects'
 import { generateId } from 'helpers/idGen';
 import { reset } from 'redux-form';
 import { createSelector } from 'reselect'
@@ -137,6 +137,25 @@ const workerFetchPeople = function* () {
   }
 }
 
+export const backgroundSyncWorker = function* () {
+  try {
+    while (true) {
+      yield call(workerFetchPeople);
+      yield delay(3000)
+    }
+  } finally {
+    if (yield cancelled()) {
+      console.log('______', 'saga canceled');
+    }
+  }
+}
+
+export const cancelPeopleSync = function* () {
+  const peopleTask = yield fork(backgroundSyncWorker)
+  yield delay(6000)
+  yield cancel(peopleTask)
+}
+
 export const addEventWatcher = (eventId, personId) => ({
   type: ADD_EVENT_REQUEST,
   payload: {
@@ -150,7 +169,6 @@ const addEventWorker = function* (action) {
   const eventsRef = firebase
     .database()
     .ref(`people/${personId}/events`);
-
   const state = yield select(stateSelector);
   const events = state.getIn(['people', personId, 'events']).concat(eventId)
   try {
@@ -170,14 +188,15 @@ const addEventWorker = function* (action) {
       }
     })
   } catch (error) {
-    console.log(error, 'error!!!!');
   }
 }
 
 export const saga = function* () {
+  yield spawn(cancelPeopleSync);
+
   yield all([
     takeEvery(ADD_REQUEST, addPeopleSaga),
     takeEvery(FETCH_PEOPLE_REQUEST, workerFetchPeople),
-    takeEvery(ADD_EVENT_REQUEST, addEventWorker)
+    takeEvery(ADD_EVENT_REQUEST, addEventWorker),
   ])
 }

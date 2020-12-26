@@ -13,11 +13,11 @@ const App = () => {
   return (
     <Provider store={store}>
       <NotificationContainer />
-      <ConnectedRouter history={history}>
-        <DragDropContextProvider debugMode={true} backend={HTML5Backend}>
+      <DragDropContextProvider debugMode={true} backend={HTML5Backend}>
+        <ConnectedRouter history={history}>
           <Routes />
-        </DragDropContextProvider>
-      </ConnectedRouter>
+        </ConnectedRouter>
+      </DragDropContextProvider>
     </Provider>
   )
 }
