@@ -17,16 +17,12 @@
       border-radius: 5px;
       background-color: rgb(236, 177, 13);
       transition: all 0.4s;
+      color: #ffffff;
+      text-decoration: none;
+
       &:hover {
         background-color: rgb(255, 211, 91);
-      }
-      & a {
-        color: #ffffff;
-        text-decoration: none;
-
-        &:hover {
-          color: #000000;
-        }
+        color: #000000;
       }
     }
   }

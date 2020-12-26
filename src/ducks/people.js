@@ -1,11 +1,13 @@
 import { appName } from 'constants/Firebase.js';
 import { Record, OrderedMap } from 'immutable'
-import { put, takeEvery, call, all, select, delay, fork, spawn, cancel, cancelled } from 'redux-saga/effects'
+import { put, takeEvery, call, all, select, delay, fork, spawn, cancel, cancelled, take } from 'redux-saga/effects';
+import { eventChannel } from 'redux-saga'
 import { generateId } from 'helpers/idGen';
 import { reset } from 'redux-form';
 import { createSelector } from 'reselect'
 import firebase from 'firebase';
 import peopleArray from 'helpers/eventsState'
+import renderNotification from 'components/Notification';
 
 export const moduleName = 'people';
 const prefix = `${appName}/${moduleName}`;
@@ -99,6 +101,7 @@ export const addPeopleSaga = function* (action) {
       payload
     })
 
+    renderNotification('success', 'Added successfully')
     yield put(reset('peopleForm'))
 
   } catch (error) {
@@ -137,23 +140,44 @@ const workerFetchPeople = function* () {
   }
 }
 
-export const backgroundSyncWorker = function* () {
-  try {
-    while (true) {
-      yield call(workerFetchPeople);
-      yield delay(3000)
-    }
-  } finally {
-    if (yield cancelled()) {
-      console.log('______', 'saga canceled');
+export const cancelPeopleSync = function* () {
+  let task;
+  while (true) {
+    const { payload } = yield take('@@router/LOCATION_CHANGE');
+
+    if (payload && payload.location.pathname.includes('people')) {
+      task = yield fork(realtimeSync)
+    } else if (task) {
+      yield cancel(task);
+      console.log('canceled people saga');
     }
   }
 }
 
-export const cancelPeopleSync = function* () {
-  const peopleTask = yield fork(backgroundSyncWorker)
-  yield delay(6000)
-  yield cancel(peopleTask)
+
+const createPeopleSocket = () => eventChannel(emit => {
+  const ref = firebase.database().ref('people');
+  const callback = data => {
+    emit({ data })
+  }
+  ref.on('value', callback);
+
+  return () => ref.off('value', callback)
+})
+
+export const realtimeSync = function* () {
+  const channel = yield call(createPeopleSocket);
+  try {
+    while (true) {
+      const { data } = yield take(channel);
+      yield put({
+        type: FETCH_PEOPLE_SUCCESS,
+        payload: data.val()
+      })
+    }
+  } finally {
+    yield call([channel, channel.close]);
+  }
 }
 
 export const addEventWatcher = (eventId, personId) => ({

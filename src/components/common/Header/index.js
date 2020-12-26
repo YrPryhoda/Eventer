@@ -7,13 +7,13 @@ const Header = ({ children, ...rest }) => {
   return (
     <>
       <div className={style.headerWrapper}>
-        <ul className={style.navWrap}>
-          <li className={style.nav}><Link to='/load-people'> People List </Link></li>
-          <li className={style.nav}><Link to='/people'> Add people </Link></li>
-          <li className={style.nav}><Link to='/events'> Events List </Link></li>
-          <li className={style.nav}><Link to='/admin'> Admin page </Link></li>
+        <nav className={style.navWrap}>
+          <Link to='/load-people' className={style.nav}>People List </Link>
+          <Link to='/people' className={style.nav}> Add people </Link>
+          <Link to='/events' className={style.nav}>Events List </Link>
+          <Link to='/admin' className={style.nav}> Admin page </Link>
           <li><SignOutButton /></li>
-        </ul>
+        </nav>
       </div>
       <div className={style.section}>
         {children}
