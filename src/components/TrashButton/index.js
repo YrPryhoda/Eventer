@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { removeEventWatcher } from 'ducks/events'
 import icon from './delete.svg';
 import style from './styles.module.scss';
-
+import { Motion, spring, presets } from 'react-motion'
 class TrashButton extends React.Component {
   render() {
 
@@ -19,11 +19,24 @@ class TrashButton extends React.Component {
       backgroundColor: canDrop ? 'red' : 'transparent'
     }
 
-    return connectDropTarget(
-      <div className={style.btnWrapper} style={dropStyle}>
-        <img src={icon} alt='logo' />
-      </div>
-    )
+    return <Motion
+      defaultStyle={{ opacity: 0 }}
+      style={{
+        opacity: spring(1, {
+          ...presets.noWobble,
+          stiffness: presets.noWobble.stiffness / 10
+        })
+      }}
+    >
+      {interpolatedStyle => (connectDropTarget(
+        <div
+          className={style.btnWrapper}
+          style={{ ...dropStyle, ...interpolatedStyle }}
+        >
+          <img src={icon} alt='logo' />
+        </div>)
+      )}
+    </Motion>
   }
 }
 

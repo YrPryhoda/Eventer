@@ -130,7 +130,7 @@ export const removeEventWatcher = (payload) => ({
 
 const removeEventWorker = function* (action) {
   const { payload } = action;
-  console.log(payload);
+
   const ref = firebase.database().ref(`events/${payload.uid}`)
 
   try {
