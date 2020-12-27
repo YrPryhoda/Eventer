@@ -3,7 +3,8 @@ import { appName } from 'constants/Firebase.js';
 import { Record } from 'immutable'
 import renderNotification from 'components/Notification';
 import { push } from 'react-router-redux'
-import { put, call, take, all, cps, takeEvery } from 'redux-saga/effects';
+import { put, call, take, all, takeEvery } from 'redux-saga/effects';
+import { eventChannel } from 'redux-saga';
 
 export const moduleName = 'auth';
 export const SIGN_UP_REQUEST = `${appName}/${moduleName}/SIGN_UP_REQUEST`;
@@ -85,6 +86,8 @@ export const signUpSaga = function* () {
         payload: { user }
       });
 
+      yield put(push('/events'))
+
     } catch (error) {
       yield put({
         type: SIGN_UP_ERROR,
@@ -101,18 +104,24 @@ export function loginRefresh() {
   }
 }
 
+const createAuthChannel = () => eventChannel(emit => firebase.auth().onAuthStateChanged(user => emit({ user })));
+
 export const watchStatusChange = function* () {
-  const auth = firebase.auth();
-  try {
-    yield cps([auth, auth.onAuthStateChanged])
-    yield put({
-      type: SIGN_IN_FAIL
-    })
-  } catch (user) {
-    yield put({
-      type: SIGN_IN_SUCCESS,
-      payload: { user }
-    })
+  const chan = yield call(createAuthChannel);
+  while (true) {
+    const { user } = yield take(chan);
+
+    if (user) {
+      yield put({
+        type: SIGN_IN_SUCCESS,
+        payload: { user }
+      })
+    } else {
+      yield put({
+        type: SIGN_OUT_SUCCESS,
+      })
+      yield put(push('/auth/signin'))
+    }
   }
 }
 
@@ -124,14 +133,8 @@ export function signOut() {
 
 export const signOutSaga = function* () {
   const auth = firebase.auth();
-
   try {
     yield call([auth, auth.signOut]);
-    yield put({
-      type: SIGN_OUT_SUCCESS,
-    })
-    yield put(push('/auth/signin'))
-
   } catch (_) {
 
   }
@@ -172,7 +175,7 @@ export const saga = function* () {
   yield all([
     takeEvery(SIGN_IN_REQUEST, signInSaga),
     signUpSaga(),
-    takeEvery(SIGN_IN_REFRESH, watchStatusChange),
+    watchStatusChange(),
     takeEvery(SIGN_OUT_REQUEST, signOutSaga)
   ])
 }

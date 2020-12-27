@@ -19,13 +19,14 @@ class EventCard extends React.Component {
       </p>
     );
 
-    const dropStyle = {
-      border: `2px solid ${canDrop ? 'brown' : 'transparent'}`,
-      backgroundColor: hovered ? 'lightgreen' : 'transparent'
-    }
-
     return connectDropTarget(
-      <div className={style.card} style={dropStyle}>
+      <div
+        className={`
+          ${style.card}
+          ${canDrop ? style.canDrop : null}
+          ${hovered ? style.cardHovered : null}
+        `}
+      >
         <h3>{title}</h3>
         <p>{where}, {when}</p>
         {peopleBlock}
@@ -39,7 +40,7 @@ const spec = {
     const personUid = monitor.getItem().uid;
     const eventUid = props.event.uid;
     props.addEventWatcher(eventUid, personUid);
-    
+
     return {
       eventUid
     }
@@ -57,5 +58,5 @@ const mapStateToProps = (state, props) => {
     people: allPeopleSelector(state).filter(person => person.events.includes(props.event.uid))
   }
 }
- 
+
 export default connect(mapStateToProps, { addEventWatcher })(DropTarget(['person'], spec, collect)(EventCard))

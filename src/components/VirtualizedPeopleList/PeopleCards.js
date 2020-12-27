@@ -29,7 +29,7 @@ const PeopleCards = () => {
         {({ width }) => (
           <List
             rowCount={people.length}
-            rowHeight={80}
+            rowHeight={70}
             height={300}
             width={width}
             rowRenderer={rowRenderer}

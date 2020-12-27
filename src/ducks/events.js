@@ -2,8 +2,7 @@ import firebase from 'firebase';
 import { appName } from 'constants/Firebase.js';
 import { Record, OrderedMap, OrderedSet } from 'immutable'
 import eventsArray from 'helpers/eventsState'
-// import renderNotification from 'components/Notification';
-// import { push } from 'react-router-redux'
+import renderNotification from 'components/Notification';
 import { put, call, all, take, select, takeEvery } from 'redux-saga/effects';
 import { createSelector } from 'reselect'
 
@@ -75,7 +74,6 @@ export const sectionSelector = createSelector(stateSelector, selection => select
 export const selectedEventsSelector = createSelector(eventsSelector, sectionSelector, (entities, selection) => (
   selection.toArray().map(uid => entities.get(uid))
 ))
-
 export const idSelector = (_, props) => props.uid;
 export const eventSelector = createSelector(eventsSelector, idSelector, (entities, id) => entities.get(id))
 
@@ -143,6 +141,8 @@ const removeEventWorker = function* (action) {
       type: DELETE_EVENT_SUCCESS,
       payload
     })
+
+    renderNotification('info', 'Event deleted successfully')
   } catch (_) {
 
   }

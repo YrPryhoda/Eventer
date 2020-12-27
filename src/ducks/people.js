@@ -1,6 +1,6 @@
 import { appName } from 'constants/Firebase.js';
 import { Record, OrderedMap } from 'immutable'
-import { put, takeEvery, call, all, select, delay, fork, spawn, cancel, cancelled, take } from 'redux-saga/effects';
+import { put, takeEvery, call, all, select, fork, spawn, cancel, take } from 'redux-saga/effects';
 import { eventChannel } from 'redux-saga'
 import { generateId } from 'helpers/idGen';
 import { reset } from 'redux-form';
@@ -149,7 +149,6 @@ export const cancelPeopleSync = function* () {
       task = yield fork(realtimeSync)
     } else if (task) {
       yield cancel(task);
-      console.log('canceled people saga');
     }
   }
 }
@@ -211,6 +210,8 @@ const addEventWorker = function* (action) {
         events
       }
     })
+
+    renderNotification('success', 'User subscribed')
   } catch (error) {
   }
 }

@@ -1,0 +1,14 @@
+.blockWrap {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-left: 15px;
+}
+
+.dragged {
+  background-color: rgb(253, 218, 16);
+}
+
+.peopleBlock {
+  background-color: transparent;
+}

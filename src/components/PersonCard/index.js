@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { DragSource } from 'react-dnd';
-import { getEmptyImage } from 'react-dnd-html5-backend'
+import { getEmptyImage } from 'react-dnd-html5-backend';
+import styles from './styles.module.scss'
 class PersonCard extends Component {
   componentDidMount() {
     this.props.connectPreview(getEmptyImage())
@@ -8,12 +9,14 @@ class PersonCard extends Component {
 
   render() {
     const { person, style, connectDragSource, isDragging } = this.props;
-    const draggStyle = {
-      backgroundColor: isDragging ? 'green' : 'white'
-    }
 
     return connectDragSource(
-      <div style={{ width: 200, height: 100, ...draggStyle, ...style }}>
+      <div
+        style={{ width: 200, height: 100, ...style }}
+        className={`
+        ${styles.blockWrap} ${isDragging ? styles.dragged : styles.peopleBlock}
+        `}
+      >
         <h3>{person.firstName}&nbsp;{person.lastName}</h3>
         <p>{person.email}</p>
       </div>
@@ -33,7 +36,7 @@ const spec = {
      const eventUid = monitor.getDropResult().eventUid;
   */
 
-  } 
+  }
 }
 
 const collect = (connect, monitor) => ({
