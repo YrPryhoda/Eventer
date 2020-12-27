@@ -1,9 +1,16 @@
 .btn {
   margin: 20px;
-  padding: 5px 10px;
-  background-color: #aae28a;
-  border: 1px solid rgb(22, 105, 22);
+  padding: 8px 20px;
+  font-size: 0.9rem;
+  background-color: #ffd050;
+  border: 1px solid rgb(204, 190, 0);
   border-radius: 5px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #e6b01d;
+    color: #ffffff;
+  }
 }
 
 .header {
